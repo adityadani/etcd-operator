@@ -37,8 +37,10 @@ func (c *Cluster) selectMasterNodes() ([]string, error) {
 		LabelSelector: selector,
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to list master nodes: %v", err)
 	}
+	// TODO: take taints into consideration? k8s might support schedule dryrun for other
+	// components to test schedulability though...
 	res := make([]string, len(nodes.Items))
 	for i := range nodes.Items {
 		res[i] = nodes.Items[i].Name
